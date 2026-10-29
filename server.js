@@ -8,7 +8,7 @@ app.use(cors());
 
 // Подключение к облачной базе данных Supabase
 const pool = new Pool({
-    connectionString: 'postgresql://postgres:2281488322economics@db.jfqhfvlegsocpwhlgyrz.supabase.co:6543/postgres',
+    connectionString: 'postgresql://postgres.jfqhfvlegsocpwhlgyrz:2281488322economics@aws-0-eu-west-1.pooler.supabase.com:6543/postgres',
     ssl: { rejectUnauthorized: false } 
 });
 
