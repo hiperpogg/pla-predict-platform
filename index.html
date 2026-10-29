@@ -15,23 +15,28 @@
             background-color: #F9F9F8;
             color: #111827;
         }
+
         .font-serif-title {
             font-family: 'Newsreader', Georgia, serif;
         }
+
         .font-mono-num {
             font-family: 'JetBrains Mono', monospace;
             font-variant-numeric: tabular-nums;
         }
+
         input[type=range] {
             -webkit-appearance: none;
             appearance: none;
             background: transparent;
             cursor: pointer;
         }
+
         input[type=range]::-webkit-slider-runnable-track {
             background: #D1D5DB;
             height: 4px;
         }
+
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
@@ -44,9 +49,9 @@
         }
     </style>
 </head>
+
 <body class="min-h-screen flex flex-col antialiased selection:bg-neutral-900 selection:text-white">
 
-    <!-- Верхняя строгая полоса -->
     <div class="border-b border-neutral-300 bg-white text-xs text-neutral-600">
         <div class="max-w-6xl mx-auto px-6 py-2.5 flex flex-wrap justify-between items-center gap-4">
             <div class="flex items-center gap-3">
@@ -63,7 +68,6 @@
 
     <main class="flex-grow max-w-6xl mx-auto px-6 py-10 w-full">
 
-        <!-- Заголовок исследования -->
         <header class="border-b border-neutral-900 pb-8 mb-8">
             <div class="text-xs font-mono-num uppercase tracking-widest text-neutral-500 mb-3">
                 Экспериментальное исследование материалов • 3D-печать (FDM)
@@ -76,10 +80,8 @@
             </p>
         </header>
 
-        <!-- Блок 1: Зачем мы это делаем и что за лопатка -->
         <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 border-b border-neutral-300 pb-10 mb-10">
-            
-            <!-- Смысл исследования (7 колонок) -->
+
             <div class="lg:col-span-7 bg-white border border-neutral-300 p-6 flex flex-col justify-between">
                 <div>
                     <div class="font-mono-num text-xs uppercase tracking-wider text-neutral-500 mb-2">
@@ -106,7 +108,6 @@
                 </div>
             </div>
 
-            <!-- Что такое лопатка (5 колонок со схемой) -->
             <div class="lg:col-span-5 bg-white border border-neutral-300 p-6 flex flex-col justify-between">
                 <div>
                     <div class="font-mono-num text-xs uppercase tracking-wider text-neutral-500 mb-2">
@@ -120,10 +121,8 @@
                     </p>
                 </div>
 
-                <!-- Чертеж лопатки (SVG) -->
                 <div class="bg-neutral-50 border border-neutral-200 p-4 my-2">
                     <svg viewBox="0 0 420 120" class="w-full h-auto" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Стрелки растяжения F -->
                         <line x1="10" y1="60" x2="48" y2="60" stroke="#B91C1C" stroke-width="2"/>
                         <polygon points="10,60 20,54 20,66" fill="#B91C1C"/>
                         <text x="14" y="46" fill="#B91C1C" font-family="JetBrains Mono" font-size="12" font-weight="600">← F</text>
@@ -132,21 +131,17 @@
                         <polygon points="410,60 400,54 400,66" fill="#B91C1C"/>
                         <text x="378" y="46" fill="#B91C1C" font-family="JetBrains Mono" font-size="12" font-weight="600">F →</text>
 
-                        <!-- Контур лопатки -->
-                        <path d="M55,25 L125,25 C145,25 155,44 175,44 L245,44 C265,44 275,25 295,25 L365,25 L365,95 L295,95 C275,95 265,76 245,76 L175,76 C155,76 145,95 125,95 L55,95 Z" 
+                        <path d="M55,25 L125,25 C145,25 155,44 175,44 L245,44 C265,44 275,25 295,25 L365,25 L365,95 L295,95 C275,95 265,76 245,76 L175,76 C155,76 145,95 125,95 L55,95 Z"
                               fill="#E5E7EB" stroke="#111827" stroke-width="2"/>
-                        
-                        <!-- Штриховка захватов -->
+
                         <rect x="62" y="32" width="52" height="56" fill="none" stroke="#6B7280" stroke-width="1" stroke-dasharray="3 3"/>
                         <rect x="306" y="32" width="52" height="56" fill="none" stroke="#6B7280" stroke-width="1" stroke-dasharray="3 3"/>
 
-                        <!-- Линия разрыва посередине шейки -->
                         <path d="M210,44 L206,52 L214,60 L207,68 L210,76" stroke="#B91C1C" stroke-width="2"/>
 
-                        <!-- Подписи на чертеже -->
                         <text x="88" y="64" text-anchor="middle" fill="#374151" font-family="JetBrains Mono" font-size="10">Захват</text>
                         <text x="332" y="64" text-anchor="middle" fill="#374151" font-family="JetBrains Mono" font-size="10">Захват</text>
-                        <text x="210" y="34" text-anchor="middle" fill="#111827" font-family="JetBrains Mono" font-size="10" font-weight="600">Узкая шейка (место разрыва)</text>
+                        <text x="210" y="17" text-anchor="middle" fill="#111827" font-family="JetBrains Mono" font-size="10" font-weight="600">Узкая шейка (место разрыва)</text>
                     </svg>
                 </div>
 
@@ -156,7 +151,6 @@
             </div>
         </section>
 
-        <!-- Сводные цифры эксперимента (Табличная полоса) -->
         <section class="border-b border-neutral-300 pb-8 mb-10">
             <div class="text-xs font-mono-num uppercase tracking-wider text-neutral-500 mb-3">
                 Таблица 1. Ключевые показатели, рассчитанные по базе данных испытаний
@@ -190,10 +184,8 @@
             </div>
         </section>
 
-        <!-- Основная рабочая область: График + Калькулятор -->
         <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 border-b border-neutral-300 pb-10 mb-10 items-start">
-            
-            <!-- График (7 колонок) -->
+
             <div class="lg:col-span-7 bg-white border border-neutral-300 p-6">
                 <div class="flex flex-wrap justify-between items-baseline border-b border-neutral-200 pb-3 mb-4 gap-2">
                     <div>
@@ -203,12 +195,10 @@
                     <span class="font-mono-num text-xs text-neutral-500" id="formulaBadge">F(t) = —</span>
                 </div>
 
-                <!-- Холст графика -->
                 <div class="relative h-[400px] w-full">
                     <canvas id="forceChart"></canvas>
                 </div>
 
-                <!-- Понятная легенда под графиком -->
                 <div class="mt-4 pt-3 border-t border-neutral-200 flex flex-wrap gap-x-5 gap-y-2 text-xs text-neutral-700 font-mono-num">
                     <div class="flex items-center gap-2">
                         <span class="w-2.5 h-2.5 rounded-full bg-neutral-900 inline-block"></span>
@@ -230,7 +220,6 @@
                 </div>
             </div>
 
-            <!-- Калькулятор разрыва лопатки (5 колонок) -->
             <div class="lg:col-span-5 bg-white border border-neutral-300 p-6">
                 <div class="border-b border-neutral-900 pb-3 mb-5">
                     <div class="font-mono-num text-xs uppercase tracking-wider text-neutral-500">
@@ -244,7 +233,6 @@
                     </p>
                 </div>
 
-                <!-- Ползунок времени (строго до момента разрушения!) -->
                 <div class="space-y-4 pb-5 border-b border-neutral-200">
                     <div>
                         <div class="flex justify-between items-baseline text-xs mb-2">
@@ -252,10 +240,10 @@
                             <span class="font-mono-num text-xs text-neutral-500" id="rangeLimitLabel">от 0 до 20.7 с</span>
                         </div>
                         <div class="flex items-center gap-4">
-                            <input type="range" id="timeSlider" min="0" max="20.7" step="0.5" value="10" 
+                            <input type="range" id="timeSlider" min="0" max="20.7" step="0.1" value="10"
                                    oninput="syncTime(this.value)" class="w-full">
                             <div class="flex items-center border border-neutral-400 bg-neutral-50 px-2 py-1 w-24 shrink-0">
-                                <input type="number" id="timeInput" min="0" max="20.7" step="0.5" value="10"
+                                <input type="number" id="timeInput" min="0" max="20.7" step="0.1" value="10"
                                        oninput="syncTime(this.value)"
                                        class="w-full bg-transparent font-mono-num text-sm font-semibold text-neutral-900 focus:outline-none text-right pr-1">
                                 <span class="font-mono-num text-xs text-neutral-500">с</span>
@@ -263,7 +251,6 @@
                         </div>
                     </div>
 
-                    <!-- Быстрые кнопки -->
                     <div class="flex items-center gap-1.5 flex-wrap">
                         <span class="text-[11px] font-mono-num text-neutral-500 mr-1">Быстрый выбор:</span>
                         <button onclick="syncTime(0)" class="px-2 py-0.5 text-xs font-mono-num border border-neutral-300 hover:border-neutral-900 bg-neutral-50">0 с (Сухая)</button>
@@ -274,7 +261,6 @@
                     </div>
                 </div>
 
-                <!-- Результаты расчета -->
                 <div class="py-4 space-y-3 font-mono-num text-xs border-b border-neutral-200">
                     <div class="flex justify-between items-baseline py-1 border-b border-dashed border-neutral-200">
                         <span class="font-sans text-neutral-600">Сила разрыва сухой лопатки:</span>
@@ -294,7 +280,6 @@
                     </div>
                 </div>
 
-                <!-- Шкала запаса прочности -->
                 <div class="pt-4">
                     <div class="flex justify-between text-xs font-mono-num mb-1.5">
                         <span class="text-neutral-600">ОСТАВШИЙСЯ ЗАПАС ПРОЧНОСТИ:</span>
@@ -304,7 +289,6 @@
                         <div id="calcRetentionBar" class="h-full bg-neutral-900 transition-all duration-200" style="width: 100%"></div>
                     </div>
 
-                    <!-- Понятный вывод по выбранному времени -->
                     <div id="verdictContainer" class="bg-neutral-100 border-l-4 border-neutral-900 p-3.5 text-xs text-neutral-800 leading-relaxed">
                         <div class="font-mono-num text-[11px] uppercase font-semibold text-neutral-900 mb-1" id="calcRegimeTitle">
                             Состояние детали
@@ -315,10 +299,8 @@
             </div>
         </section>
 
-        <!-- Сравнение по группам (0, 5, 10 секунд) и физика процесса -->
         <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 border-b border-neutral-300 pb-10 mb-10">
-            
-            <!-- Таблица по сериям (6 колонок) -->
+
             <div class="lg:col-span-6">
                 <div class="text-xs font-mono-num uppercase tracking-wider text-neutral-500 mb-3">
                     Таблица 2. Средние результаты по группам испытаний (кликните для просмотра)
@@ -344,7 +326,6 @@
                 </p>
             </div>
 
-            <!-- Три этапа разрушения простыми словами (6 колонок) -->
             <div class="lg:col-span-6">
                 <div class="text-xs font-mono-num uppercase tracking-wider text-neutral-500 mb-3">
                     Что именно происходит с лопаткой в спирте?
@@ -366,7 +347,6 @@
             </div>
         </section>
 
-        <!-- Блок ГЛАВНОГО ВЫВОДА исследования -->
         <section class="border-b border-neutral-300 pb-10 mb-10">
             <div class="bg-white border-2 border-neutral-900 p-6 md:p-8">
                 <div class="font-mono-num text-xs uppercase tracking-widest text-neutral-500 mb-2">
@@ -403,7 +383,6 @@
             </div>
         </section>
 
-        <!-- Спойлер/Таблица со всеми точками из базы данных -->
         <section>
             <div class="flex justify-between items-baseline mb-3">
                 <div class="text-xs font-mono-num uppercase tracking-wider text-neutral-500">
@@ -445,56 +424,73 @@
         let regression = { slope: 0, intercept: 0, r2: 0, zeroTime: 20.7 };
         let myChart = null;
 
-        // Плагин для отрисовки фоновых цветовых зон прочности и линии разрушения на графике
         const backgroundZonesPlugin = {
             id: 'backgroundZones',
+
             beforeDraw(chart) {
-                const { ctx, chartArea: { left, right, top, bottom }, scales: { x, y } } = chart;
+                const {
+                    ctx,
+                    chartArea: { left, right, top, bottom },
+                    scales: { y }
+                } = chart;
+
                 if (!regression.intercept) return;
 
                 ctx.save();
 
-                // Пороги по оси Y: >75% (Зеленая зона), 35-75% (Желтая), <35% (Красная)
                 const y75 = y.getPixelForValue(regression.intercept * 0.75);
                 const y35 = y.getPixelForValue(regression.intercept * 0.35);
 
-                // Зеленая зона (высокая прочность)
                 ctx.fillStyle = 'rgba(16, 185, 129, 0.05)';
                 ctx.fillRect(left, top, right - left, Math.max(0, y75 - top));
 
-                // Желтая зона (ослабление)
                 ctx.fillStyle = 'rgba(245, 158, 11, 0.06)';
                 ctx.fillRect(left, y75, right - left, Math.max(0, y35 - y75));
 
-                // Красная зона (риск поломки)
                 ctx.fillStyle = 'rgba(239, 68, 68, 0.06)';
                 ctx.fillRect(left, y35, right - left, Math.max(0, bottom - y35));
 
-                // Вертикальная линия порога полного разрушения (zeroTime)
-                const xZeroPx = x.getPixelForValue(regression.zeroTime);
-                if (xZeroPx >= left && xZeroPx <= right) {
-                    ctx.beginPath();
-                    ctx.setLineDash([4, 4]);
-                    ctx.strokeStyle = '#991B1B';
-                    ctx.lineWidth = 1;
-                    ctx.moveTo(xZeroPx, top);
-                    ctx.lineTo(xZeroPx, bottom);
-                    ctx.stroke();
+                ctx.restore();
+            },
 
-                    ctx.fillStyle = '#991B1B';
-                    ctx.font = '500 10px "JetBrains Mono", monospace';
-                    ctx.textAlign = 'right';
-                    ctx.fillText(`Порог разрушения (~${regression.zeroTime.toFixed(1)} с)`, xZeroPx - 6, top + 14);
-                }
+            afterDraw(chart) {
+                const {
+                    ctx,
+                    chartArea: { left, right, top, bottom },
+                    scales: { x }
+                } = chart;
+
+                const xZeroPx = x.getPixelForValue(regression.zeroTime);
+
+                if (xZeroPx < left || xZeroPx > right) return;
+
+                ctx.save();
+
+                ctx.beginPath();
+                ctx.setLineDash([4, 4]);
+                ctx.strokeStyle = '#991B1B';
+                ctx.lineWidth = 1;
+                ctx.moveTo(xZeroPx, top);
+                ctx.lineTo(xZeroPx, bottom);
+                ctx.stroke();
+
+                ctx.fillStyle = '#991B1B';
+                ctx.font = '500 10px "JetBrains Mono", monospace';
+                ctx.textAlign = 'right';
+                ctx.fillText(
+                    `Порог разрушения (~${regression.zeroTime.toFixed(1)} с)`,
+                    xZeroPx - 6,
+                    top + 14
+                );
 
                 ctx.restore();
             }
         };
 
-        // Расчет линейной регрессии (МНК)
         function calculateLinearRegression(data) {
             const n = data.length;
             let sumX = 0, sumY = 0, sumXY = 0, sumXX = 0;
+
             data.forEach(p => {
                 sumX += p.x;
                 sumY += p.y;
@@ -507,6 +503,7 @@
             const meanY = sumY / n;
 
             let ssTot = 0, ssRes = 0;
+
             data.forEach(p => {
                 const yPred = slope * p.x + intercept;
                 ssTot += Math.pow(p.y - meanY, 2);
@@ -514,40 +511,46 @@
             });
 
             const r2 = ssTot !== 0 ? 1 - (ssRes / ssTot) : 0;
-            // Точное время, когда сила разрыва падает ровно до 0 Н
             const zeroTime = slope < 0 ? Number((-intercept / slope).toFixed(1)) : 22;
 
             return { slope, intercept, r2, zeroTime };
         }
 
-        // Синхронизация ползунка и поля времени
         function syncTime(val) {
             let num = parseFloat(val);
+
             if (isNaN(num) || num < 0) num = 0;
             if (num > regression.zeroTime) num = regression.zeroTime;
 
             document.getElementById('timeSlider').value = num;
             document.getElementById('timeInput').value = num;
+
             updatePrediction();
         }
 
-        // Заполнение таблиц и показателей
         function renderTables(data, reg) {
             const f0 = reg.intercept;
             const rate = Math.abs(reg.slope);
             const halfTime = (f0 / 2) / rate;
 
-            // Настраиваем предел ползунка ровно под время полного разрушения!
             const slider = document.getElementById('timeSlider');
             const numInput = document.getElementById('timeInput');
+
             slider.max = reg.zeroTime;
             numInput.max = reg.zeroTime;
-            document.getElementById('rangeLimitLabel').textContent = `от 0 до ${reg.zeroTime} с (до разрушения)`;
-            document.getElementById('btnMaxTime').textContent = `${reg.zeroTime} с (0 Н)`;
-            document.getElementById('btnMaxTime').onclick = () => syncTime(reg.zeroTime);
 
-            // Сводка в Таблице 1 и выводе
-            document.getElementById('formulaBadge').textContent = `Формула: F(t) = ${f0.toFixed(1)} − ${rate.toFixed(1)}·t`;
+            document.getElementById('rangeLimitLabel').textContent =
+                `от 0 до ${reg.zeroTime} с (до разрушения)`;
+
+            document.getElementById('btnMaxTime').textContent =
+                `${reg.zeroTime} с (0 Н)`;
+
+            document.getElementById('btnMaxTime').onclick =
+                () => syncTime(reg.zeroTime);
+
+            document.getElementById('formulaBadge').textContent =
+                `Формула: F(t) = ${f0.toFixed(1)} − ${rate.toFixed(1)}·t`;
+
             document.getElementById('statF0').textContent = `${f0.toFixed(1)} Н`;
             document.getElementById('statSlope').textContent = `−${rate.toFixed(1)} Н/с`;
             document.getElementById('statHalfTime').textContent = `${halfTime.toFixed(1)} с`;
@@ -556,8 +559,8 @@
             document.getElementById('statSampleSize').textContent = `испытано: ${data.length} шт.`;
             document.getElementById('conclusionRate').textContent = `${rate.toFixed(1)} Н`;
 
-            // Таблица 2: Группировка по времени (0, 5, 10 с)
             const groups = {};
+
             data.forEach(p => {
                 if (!groups[p.x]) groups[p.x] = [];
                 groups[p.x].push(p.y);
@@ -566,8 +569,8 @@
             const groupBody = document.getElementById('groupStatsBody');
             groupBody.innerHTML = '';
 
-            const baseMean = groups[0] 
-                ? groups[0].reduce((a, b) => a + b, 0) / groups[0].length 
+            const baseMean = groups[0]
+                ? groups[0].reduce((a, b) => a + b, 0) / groups[0].length
                 : f0;
 
             Object.keys(groups).map(Number).sort((a, b) => a - b).forEach(tVal => {
@@ -581,6 +584,7 @@
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-neutral-100 cursor-pointer transition-colors';
                 tr.onclick = () => syncTime(tVal);
+
                 tr.innerHTML = `
                     <td class="py-2.5 px-3 font-semibold text-neutral-900">${tVal} сек</td>
                     <td class="py-2.5 px-3 text-neutral-600">${arr.length} шт.</td>
@@ -590,10 +594,10 @@
                         ${tVal === 0 ? 'Сухой эталон' : '−' + dropN.toFixed(0) + ' Н (−' + dropPct.toFixed(0) + '%)'}
                     </td>
                 `;
+
                 groupBody.appendChild(tr);
             });
 
-            // Таблица 3: Все точки
             const sortedData = [...data].sort((a, b) => a.x - b.x || b.y - a.y);
             const rawBody = document.getElementById('rawTableBody');
             rawBody.innerHTML = '';
@@ -606,6 +610,7 @@
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-neutral-100 cursor-pointer transition-colors';
                 tr.onclick = () => syncTime(p.x);
+
                 tr.innerHTML = `
                     <td class="py-2 px-4 text-neutral-500">Лопатка #${idx + 1}</td>
                     <td class="py-2 px-4 font-medium text-neutral-900">${p.x} с</td>
@@ -615,11 +620,11 @@
                         ${p.x === 0 ? 'Контрольная группа' : diffFromF0.toFixed(1) + ' Н (' + changePct.toFixed(0) + '%)'}
                     </td>
                 `;
+
                 rawBody.appendChild(tr);
             });
         }
 
-        // Обновление калькулятора и точки на графике
         function updatePrediction() {
             if (!myChart) return;
 
@@ -634,7 +639,12 @@
 
             document.getElementById('calcF0').textContent = `${f0.toFixed(1)} Н`;
             document.getElementById('calcFt').textContent = `${ft.toFixed(1)} Н`;
-            document.getElementById('calcDeltaF').textContent = time === 0 ? '0.0 Н (без потерь)' : `−${deltaF.toFixed(1)} Н (−${lossPct.toFixed(1)}%)`;
+
+            document.getElementById('calcDeltaF').textContent =
+                time === 0
+                    ? '0.0 Н (без потерь)'
+                    : `−${deltaF.toFixed(1)} Н (−${lossPct.toFixed(1)}%)`;
+
             document.getElementById('calcKgf').textContent = `≈ ${kgf.toFixed(1)} кг`;
             document.getElementById('calcRetentionPct').textContent = `${retentionPct.toFixed(1)}%`;
 
@@ -649,44 +659,60 @@
                 bar.className = 'h-full bg-emerald-700 transition-all duration-200';
                 container.className = 'bg-emerald-50/70 border-l-4 border-emerald-700 p-3.5 text-xs text-neutral-800 leading-relaxed';
                 titleEl.textContent = 'Нормальное состояние (Высокая прочность)';
+
                 descEl.textContent = time === 0
                     ? `Сухая деталь до погружения в спирт. Чтобы разорвать лопатку, нужно приложить максимальное усилие ${f0.toFixed(1)} Н (это примерно как подвесить груз весом ${(f0/9.81).toFixed(0)} кг).`
                     : `За ${time} с спирт затронул только внешний контур детали. Чтобы разорвать лопатку, потребуется на ${deltaF.toFixed(1)} Н меньше силы, чем для сухой. Деталь ещё держит нагрузку.`;
+
             } else if (retentionPct >= 35) {
                 bar.className = 'h-full bg-amber-600 transition-all duration-200';
                 container.className = 'bg-amber-50/70 border-l-4 border-amber-600 p-3.5 text-xs text-neutral-800 leading-relaxed';
                 titleEl.textContent = 'Заметное ослабление детали (Спирт внутри слоев)';
-                descEl.textContent = `После ${time} с в спирте лопатка потеряла ${lossPct.toFixed(0)}% своей прочности! Для её разрыва теперь достаточно приложить ${ft.toFixed(1)} Н (на ${deltaF.toFixed(1)} Н меньше исходного). Использовать под нагрузкой нельзя.`;
+
+                descEl.textContent =
+                    `После ${time} с в спирте лопатка потеряла ${lossPct.toFixed(0)}% своей прочности! Для её разрыва теперь достаточно приложить ${ft.toFixed(1)} Н (на ${deltaF.toFixed(1)} Н меньше исходного). Использовать под нагрузкой нельзя.`;
+
             } else if (ft > 1) {
                 bar.className = 'h-full bg-red-700 transition-all duration-200';
                 container.className = 'bg-red-50/70 border-l-4 border-red-700 p-3.5 text-xs text-neutral-800 leading-relaxed';
                 titleEl.textContent = 'Аварийное состояние (Высокий риск поломки)';
-                descEl.textContent = `Критическая потеря прочности (${lossPct.toFixed(0)}%). Сцепление между слоями 3D-печати разрушено спиртом — лопатка порвется уже при нагрузке ${ft.toFixed(1)} Н.`;
+
+                descEl.textContent =
+                    `Критическая потеря прочности (${lossPct.toFixed(0)}%). Сцепление между слоями 3D-печати разрушено спиртом — лопатка порвется уже при нагрузке ${ft.toFixed(1)} Н.`;
+
             } else {
                 bar.className = 'h-full bg-red-900 transition-all duration-200';
                 container.className = 'bg-red-50 border-l-4 border-red-900 p-3.5 text-xs text-neutral-900 leading-relaxed';
                 titleEl.textContent = 'Полное разрушение (0% запаса прочности)';
-                descEl.textContent = `К ${regression.zeroTime} секунде по линейной модели прочность падает до 0 Н (потеряно все ${f0.toFixed(1)} Н). Слои пластика полностью утратили сцепление.`;
+
+                descEl.textContent =
+                    `К ${regression.zeroTime} секунде по линейной модели прочность падает до 0 Н (потеряно все ${f0.toFixed(1)} Н). Слои пластика полностью утратили сцепление.`;
             }
 
-            // Точка и пунктирные проекции на графике
             myChart.data.datasets[2].data = [{ x: time, y: ft }];
+
             myChart.data.datasets[3].data = [
                 { x: time, y: 0 },
                 { x: time, y: ft },
                 { x: 0, y: ft }
             ];
+
             myChart.update('none');
         }
 
         async function initPlatform() {
             const statusEl = document.getElementById('dbStatusText');
+
             try {
                 const response = await fetch('/api/experiments');
                 if (!response.ok) throw new Error('HTTP ' + response.status);
 
                 const rawData = await response.json();
-                experimentalData = rawData.map(p => ({ x: Number(p.x), y: Number(p.y) }));
+                experimentalData = rawData.map(p => ({
+                    x: Number(p.x),
+                    y: Number(p.y)
+                }));
+
                 regression = calculateLinearRegression(experimentalData);
 
                 statusEl.textContent = `Подключено (${experimentalData.length} записей)`;
@@ -694,7 +720,6 @@
 
                 renderTables(experimentalData, regression);
 
-                // Ось X заканчивается чуть правее точки разрушения (например, 22 с), чтобы не было пустого хвоста до 25 с
                 const axisMaxX = Math.ceil(regression.zeroTime + 1);
 
                 const trendLinePoints = [
@@ -703,6 +728,7 @@
                 ];
 
                 const ctx = document.getElementById('forceChart').getContext('2d');
+
                 Chart.defaults.font.family = "'JetBrains Mono', monospace";
                 Chart.defaults.font.size = 11;
                 Chart.defaults.color = '#374151';
@@ -710,6 +736,7 @@
                 myChart = new Chart(ctx, {
                     type: 'scatter',
                     plugins: [backgroundZonesPlugin],
+
                     data: {
                         datasets: [
                             {
@@ -758,51 +785,82 @@
                             }
                         ]
                     },
+
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
                         animation: false,
+
                         scales: {
                             x: {
                                 type: 'linear',
                                 position: 'bottom',
                                 min: 0,
                                 max: axisMaxX,
-                                ticks: { stepSize: 2 },
+                                ticks: {
+                                    stepSize: 2
+                                },
                                 title: {
                                     display: true,
                                     text: 'Время выдержки лопатки в спирте, t (секунды)',
                                     color: '#111827',
-                                    font: { family: "'Inter', sans-serif", size: 12, weight: '600' }
+                                    font: {
+                                        family: "'Inter', sans-serif",
+                                        size: 12,
+                                        weight: '600'
+                                    }
                                 },
-                                grid: { color: '#E5E7EB' },
-                                border: { color: '#111827', width: 1 }
+                                grid: {
+                                    color: '#E5E7EB'
+                                },
+                                border: {
+                                    color: '#111827',
+                                    width: 1
+                                }
                             },
+
                             y: {
                                 type: 'linear',
                                 min: 0,
                                 max: 340,
-                                ticks: { stepSize: 50 },
+                                ticks: {
+                                    stepSize: 50
+                                },
                                 title: {
                                     display: true,
                                     text: 'Сила для разрыва лопатки, F (Ньютоны)',
                                     color: '#111827',
-                                    font: { family: "'Inter', sans-serif", size: 12, weight: '600' }
+                                    font: {
+                                        family: "'Inter', sans-serif",
+                                        size: 12,
+                                        weight: '600'
+                                    }
                                 },
-                                grid: { color: '#E5E7EB' },
-                                border: { color: '#111827', width: 1 }
+                                grid: {
+                                    color: '#E5E7EB'
+                                },
+                                border: {
+                                    color: '#111827',
+                                    width: 1
+                                }
                             }
                         },
+
                         plugins: {
-                            legend: { display: false },
+                            legend: {
+                                display: false
+                            },
+
                             tooltip: {
                                 backgroundColor: '#111827',
                                 padding: 10,
                                 cornerRadius: 0,
                                 displayColors: false,
                                 filter: (item) => item.datasetIndex !== 3,
+
                                 callbacks: {
-                                    label: (ctx) => `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)} Н (при t = ${ctx.parsed.x} с)`
+                                    label: (ctx) =>
+                                        `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)} Н (при t = ${ctx.parsed.x} с)`
                                 }
                             }
                         }
