@@ -3,285 +3,822 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Цифровая платформа ПИШ | Анализ ПЛА</title>
+    <title>Исследование прочности ПЛА в спирте | РТУ МИРЭА × Технолицей</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #F9F9F8;
+            color: #111827;
+        }
+        .font-serif-title {
+            font-family: 'Newsreader', Georgia, serif;
+        }
+        .font-mono-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-variant-numeric: tabular-nums;
+        }
+        input[type=range] {
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+            cursor: pointer;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            background: #D1D5DB;
+            height: 4px;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            margin-top: -6px;
+            background-color: #111827;
+            height: 16px;
+            width: 16px;
+            border: 2px solid #FFFFFF;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.35);
+        }
+    </style>
 </head>
-<body class="bg-gray-100 text-gray-800 font-sans min-h-screen flex flex-col">
-    
-    <!-- Строгая шапка -->
-    <header class="bg-white border-b border-gray-300 py-6">
-        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
-            <div>
-                <h1 class="text-2xl font-bold text-gray-900 mb-1">
-                    Цифровая платформа с моделью прогнозирования свойств имплантатов
-                </h1>
-                <p class="text-gray-500 text-sm">
-                    Инженерный практикум Передовой Инженерной Школы (ПИШ)
+<body class="min-h-screen flex flex-col antialiased selection:bg-neutral-900 selection:text-white">
+
+    <!-- Верхняя строгая полоса -->
+    <div class="border-b border-neutral-300 bg-white text-xs text-neutral-600">
+        <div class="max-w-6xl mx-auto px-6 py-2.5 flex flex-wrap justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <span class="font-mono-num uppercase tracking-wider font-semibold text-neutral-900">РТУ МИРЭА • Кафедра ПИШ</span>
+                <span class="text-neutral-300">|</span>
+                <span>Стажировка Технолицей им. В. И. Долгих</span>
+            </div>
+            <div class="flex items-center gap-2 font-mono-num text-[11px]">
+                <span>База данных PostgreSQL:</span>
+                <span id="dbStatusText" class="font-semibold text-neutral-900 underline decoration-neutral-400 underline-offset-4">Подключение...</span>
+            </div>
+        </div>
+    </div>
+
+    <main class="flex-grow max-w-6xl mx-auto px-6 py-10 w-full">
+
+        <!-- Заголовок исследования -->
+        <header class="border-b border-neutral-900 pb-8 mb-8">
+            <div class="text-xs font-mono-num uppercase tracking-widest text-neutral-500 mb-3">
+                Экспериментальное исследование материалов • 3D-печать (FDM)
+            </div>
+            <h1 class="font-serif-title text-3xl md:text-4xl font-semibold text-neutral-950 leading-tight max-w-4xl mb-4">
+                Как обработка спиртом снижает прочность 3D-печатных деталей из ПЛА-пластика: эксперимент и прогнозная модель
+            </h1>
+            <p class="text-sm text-neutral-600 max-w-3xl leading-relaxed">
+                Исследование потери прочности напечатанных на 3D-принтере образцов при погружении в спирт. На основе серии реальных испытаний на разрывной машине построена математическая модель, предсказывающая усилие разрыва детали в зависимости от времени выдержки.
+            </p>
+        </header>
+
+        <!-- Блок 1: Зачем мы это делаем и что за лопатка -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 border-b border-neutral-300 pb-10 mb-10">
+            
+            <!-- Смысл исследования (7 колонок) -->
+            <div class="lg:col-span-7 bg-white border border-neutral-300 p-6 flex flex-col justify-between">
+                <div>
+                    <div class="font-mono-num text-xs uppercase tracking-wider text-neutral-500 mb-2">
+                        01 / Постановка задачи
+                    </div>
+                    <h2 class="font-serif-title text-xl font-semibold text-neutral-950 mb-3">
+                        Зачем мы проводили это исследование?
+                    </h2>
+                    <div class="space-y-3 text-sm text-neutral-700 leading-relaxed">
+                        <p>
+                            <strong>Полилактид (ПЛА / PLA)</strong> — самый популярный биоразлагаемый и безопасный для организма пластик для 3D-печати. Из него часто печатают медицинские изделия: временные фиксаторы, хирургические шаблоны, корпуса приборов и макеты имплантатов.
+                        </p>
+                        <p>
+                            Перед применением в медицине любую деталь необходимо <strong>стерилизовать</strong> (обеззаразить). Самый простой и доступный способ в клинике — погрузить деталь в этиловый или изопропиловый спирт.
+                        </p>
+                        <p>
+                            Однако 3D-печатная деталь состоит из множества тонких наплавленных слоев, между которыми есть микроскопические поры. <strong>Наша цель</strong> — точно измерить, насколько быстро спирт проникает внутрь пластика, ослабляет сцепление слоев и уменьшает силу, которую способна выдержать деталь до разрыва.
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-5 pt-4 border-t border-neutral-200 flex items-center justify-between text-xs font-mono-num text-neutral-600">
+                    <span>Метод испытания: растяжение до разрыва</span>
+                    <span>Среда: спиртовой раствор</span>
+                </div>
+            </div>
+
+            <!-- Что такое лопатка (5 колонок со схемой) -->
+            <div class="lg:col-span-5 bg-white border border-neutral-300 p-6 flex flex-col justify-between">
+                <div>
+                    <div class="font-mono-num text-xs uppercase tracking-wider text-neutral-500 mb-2">
+                        02 / Объект испытаний
+                    </div>
+                    <h2 class="font-serif-title text-xl font-semibold text-neutral-950 mb-3">
+                        Что такое «испытательная лопатка»?
+                    </h2>
+                    <p class="text-sm text-neutral-700 leading-relaxed mb-4">
+                        Чтобы проверить прочность материала честно, нельзя тянуть детали случайной формы. В инженерии (по ГОСТ 11262 и ISO 527) на 3D-принтере печатают стандартный плоский образец в форме <strong>двусторонней лопатки</strong> (гантели):
+                    </p>
+                </div>
+
+                <!-- Чертеж лопатки (SVG) -->
+                <div class="bg-neutral-50 border border-neutral-200 p-4 my-2">
+                    <svg viewBox="0 0 420 120" class="w-full h-auto" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Стрелки растяжения F -->
+                        <line x1="10" y1="60" x2="48" y2="60" stroke="#B91C1C" stroke-width="2"/>
+                        <polygon points="10,60 20,54 20,66" fill="#B91C1C"/>
+                        <text x="14" y="46" fill="#B91C1C" font-family="JetBrains Mono" font-size="12" font-weight="600">← F</text>
+
+                        <line x1="372" y1="60" x2="410" y2="60" stroke="#B91C1C" stroke-width="2"/>
+                        <polygon points="410,60 400,54 400,66" fill="#B91C1C"/>
+                        <text x="378" y="46" fill="#B91C1C" font-family="JetBrains Mono" font-size="12" font-weight="600">F →</text>
+
+                        <!-- Контур лопатки -->
+                        <path d="M55,25 L125,25 C145,25 155,44 175,44 L245,44 C265,44 275,25 295,25 L365,25 L365,95 L295,95 C275,95 265,76 245,76 L175,76 C155,76 145,95 125,95 L55,95 Z" 
+                              fill="#E5E7EB" stroke="#111827" stroke-width="2"/>
+                        
+                        <!-- Штриховка захватов -->
+                        <rect x="62" y="32" width="52" height="56" fill="none" stroke="#6B7280" stroke-width="1" stroke-dasharray="3 3"/>
+                        <rect x="306" y="32" width="52" height="56" fill="none" stroke="#6B7280" stroke-width="1" stroke-dasharray="3 3"/>
+
+                        <!-- Линия разрыва посередине шейки -->
+                        <path d="M210,44 L206,52 L214,60 L207,68 L210,76" stroke="#B91C1C" stroke-width="2"/>
+
+                        <!-- Подписи на чертеже -->
+                        <text x="88" y="64" text-anchor="middle" fill="#374151" font-family="JetBrains Mono" font-size="10">Захват</text>
+                        <text x="332" y="64" text-anchor="middle" fill="#374151" font-family="JetBrains Mono" font-size="10">Захват</text>
+                        <text x="210" y="34" text-anchor="middle" fill="#111827" font-family="JetBrains Mono" font-size="10" font-weight="600">Узкая шейка (место разрыва)</text>
+                    </svg>
+                </div>
+
+                <p class="text-xs text-neutral-600 leading-relaxed mt-2">
+                    Широкие края зажимаются в тисках разрывной машины, которая тянет образец в разные стороны. Благодаря сужению в центре лопатка всегда рвется строго посередине, а датчик фиксирует <strong>максимальную силу разрыва в Ньютонах (Н)</strong>.
                 </p>
             </div>
-            <div class="hidden md:block text-right">
-                <span class="text-xs text-gray-400 uppercase tracking-widest block">Материал</span>
-                <span class="text-lg font-semibold text-blue-600">ПЛА (Полилактид)</span>
-            </div>
-        </div>
-    </header>
+        </section>
 
-    <!-- Основной контент -->
-    <main class="flex-grow max-w-7xl mx-auto px-6 py-8 w-full space-y-6">
-        
-        <!-- Верхний ряд: Справочная информация -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Характеристики -->
-            <div class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
-                <h2 class="text-lg font-bold text-gray-800 border-b border-gray-100 pb-2 mb-4">Характеристики материала</h2>
-                <ul class="space-y-3 text-sm text-gray-600">
-                    <li class="flex items-start gap-2">
-                        <span class="text-blue-500 mt-0.5">•</span> 
-                        <span><strong>Биосовместимость:</strong> Полилактид (PLA) применяется для создания биоразлагаемых медицинских имплантатов.</span>
-                    </li>
-                    <li class="flex items-start gap-2">
-                        <span class="text-blue-500 mt-0.5">•</span> 
-                        <span><strong>Химическая стойкость:</strong> Материал уязвим к полярным растворителям (включая спирты), что ограничивает методы его стерилизации.</span>
-                    </li>
-                    <li class="flex items-start gap-2">
-                        <span class="text-blue-500 mt-0.5">•</span> 
-                        <span><strong>Механика:</strong> Высокий модуль упругости в исходном состоянии, сменяющийся хрупкостью при начале деструкции.</span>
-                    </li>
-                </ul>
+        <!-- Сводные цифры эксперимента (Табличная полоса) -->
+        <section class="border-b border-neutral-300 pb-8 mb-10">
+            <div class="text-xs font-mono-num uppercase tracking-wider text-neutral-500 mb-3">
+                Таблица 1. Ключевые показатели, рассчитанные по базе данных испытаний
             </div>
-
-            <!-- Наблюдения -->
-            <div class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
-                <h2 class="text-lg font-bold text-gray-800 border-b border-gray-100 pb-2 mb-4">Физические эффекты (по данным БД)</h2>
-                <div class="space-y-3 text-sm text-gray-600">
-                    <p>Анализ загруженных результатов испытаний позволил зафиксировать следующие процессы:</p>
-                    <ul class="list-disc list-inside space-y-1 ml-1">
-                        <li><strong>Эффект набухания:</strong> Масса образцов возрастает ввиду абсорбции спирта (например, с 1.443 г до 1.514 г).</li>
-                        <li><strong>Пластификация:</strong> Молекулы растворителя проникают в полимерную матрицу, увеличивая свободный объем.</li>
-                        <li><strong>Снижение прочности:</strong> Резкое падение силы на разрыв (с ~300 Н до ~150 Н) наблюдается уже на 10-й секунде экспозиции.</li>
-                    </ul>
+            <div class="grid grid-cols-2 md:grid-cols-5 border-t border-l border-neutral-300 bg-white">
+                <div class="p-4 border-r border-b border-neutral-300">
+                    <div class="text-[11px] text-neutral-500 uppercase font-mono-num">Сухая лопатка (t = 0 с)</div>
+                    <div class="text-lg font-mono-num font-semibold text-neutral-950 mt-1" id="statF0">— Н</div>
+                    <div class="text-[11px] text-neutral-500 mt-1">исходная сила разрыва</div>
+                </div>
+                <div class="p-4 border-r border-b border-neutral-300">
+                    <div class="text-[11px] text-neutral-500 uppercase font-mono-num">Скорость падения</div>
+                    <div class="text-lg font-mono-num font-semibold text-red-700 mt-1" id="statSlope">— Н/с</div>
+                    <div class="text-[11px] text-neutral-500 mt-1">потеря каждую секунду</div>
+                </div>
+                <div class="p-4 border-r border-b border-neutral-300">
+                    <div class="text-[11px] text-neutral-500 uppercase font-mono-num">Потеря 50% прочности</div>
+                    <div class="text-lg font-mono-num font-semibold text-neutral-950 mt-1" id="statHalfTime">— с</div>
+                    <div class="text-[11px] text-neutral-500 mt-1">деталь слабеет вдвое</div>
+                </div>
+                <div class="p-4 border-r border-b border-neutral-300">
+                    <div class="text-[11px] text-neutral-500 uppercase font-mono-num">Полное разрушение (0 Н)</div>
+                    <div class="text-lg font-mono-num font-semibold text-neutral-950 mt-1" id="statZeroTime">— с</div>
+                    <div class="text-[11px] text-neutral-500 mt-1">расслоение без нагрузки</div>
+                </div>
+                <div class="p-4 border-r border-b border-neutral-300 col-span-2 md:col-span-1">
+                    <div class="text-[11px] text-neutral-500 uppercase font-mono-num">Точность модели (R²)</div>
+                    <div class="text-lg font-mono-num font-semibold text-neutral-950 mt-1" id="statR2">—</div>
+                    <div class="text-[11px] text-neutral-500 mt-1" id="statSampleSize">испытано: — шт.</div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- Центральный блок: График и Прогнозирование -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Основная рабочая область: График + Калькулятор -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 border-b border-neutral-300 pb-10 mb-10 items-start">
             
-            <!-- Интерактивный график -->
-            <div class="lg:col-span-2 bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-bold text-gray-800">Параметрическая модель деградации</h3>
-                    <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded border border-gray-200">База данных подключена</span>
+            <!-- График (7 колонок) -->
+            <div class="lg:col-span-7 bg-white border border-neutral-300 p-6">
+                <div class="flex flex-wrap justify-between items-baseline border-b border-neutral-200 pb-3 mb-4 gap-2">
+                    <div>
+                        <span class="font-mono-num text-xs font-semibold uppercase text-neutral-900">Рис. 1.</span>
+                        <span class="text-sm font-medium text-neutral-800 ml-1">График падения разрывной силы лопатки от времени в спирте</span>
+                    </div>
+                    <span class="font-mono-num text-xs text-neutral-500" id="formulaBadge">F(t) = —</span>
                 </div>
-                <div class="relative h-96 w-full">
+
+                <!-- Холст графика -->
+                <div class="relative h-[400px] w-full">
                     <canvas id="forceChart"></canvas>
                 </div>
+
+                <!-- Понятная легенда под графиком -->
+                <div class="mt-4 pt-3 border-t border-neutral-200 flex flex-wrap gap-x-5 gap-y-2 text-xs text-neutral-700 font-mono-num">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-neutral-900 inline-block"></span>
+                        <span>Реальные лопатки (опыты)</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-5 h-0.5 bg-blue-700 inline-block"></span>
+                        <span>Линия прогноза F(t)</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-red-600 border-2 border-white shadow inline-block"></span>
+                        <span>Выбранное время</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 ml-auto text-[11px] text-neutral-500">
+                        <span class="w-2.5 h-2.5 bg-emerald-500/20 border border-emerald-600/40 inline-block"></span> Норма
+                        <span class="w-2.5 h-2.5 bg-amber-500/20 border border-amber-600/40 inline-block ml-1"></span> Ослабление
+                        <span class="w-2.5 h-2.5 bg-red-500/20 border border-red-600/40 inline-block ml-1"></span> Опасно
+                    </div>
+                </div>
             </div>
 
-            <!-- Блок прогнозирования -->
-            <div class="bg-blue-50 p-6 rounded-lg border border-blue-100 flex flex-col">
-                <h3 class="text-lg font-bold text-gray-900 mb-2">Расчетный модуль</h3>
-                <p class="text-sm text-gray-600 mb-6">
-                    Введите предполагаемое время нахождения имплантата в среде для вычисления предела прочности на разрыв.
-                </p>
-                
-                <div class="mb-4">
-                    <label for="timeInput" class="block text-sm font-medium text-gray-700 mb-1">Время выдержки (с):</label>
-                    <input type="number" id="timeInput" min="0" step="0.5" placeholder="Например: 12" 
-                           class="w-full border border-gray-300 rounded bg-white px-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
-                </div>
-                
-                <button onclick="predictForce()" 
-                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition-colors duration-200">
-                    Рассчитать
-                </button>
-                
-                <!-- Контейнер результата (с плавной анимацией появления) -->
-                <div id="resultContainer" class="mt-6 pt-4 border-t border-blue-200 opacity-0 transform translate-y-4 transition-all duration-500">
-                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Ожидаемая прочность</p>
-                    <p class="text-3xl font-bold text-blue-700">
-                        <span id="predictedForce">0.0</span> <span class="text-lg text-gray-600 font-normal">Н</span>
+            <!-- Калькулятор разрыва лопатки (5 колонок) -->
+            <div class="lg:col-span-5 bg-white border border-neutral-300 p-6">
+                <div class="border-b border-neutral-900 pb-3 mb-5">
+                    <div class="font-mono-num text-xs uppercase tracking-wider text-neutral-500">
+                        03 / Интерактивный расчет
+                    </div>
+                    <h2 class="font-serif-title text-xl font-semibold text-neutral-950 mt-0.5">
+                        Калькулятор прочности лопатки
+                    </h2>
+                    <p class="text-xs text-neutral-600 mt-1">
+                        Выберите время нахождения детали в спирте, чтобы узнать, какое усилие понадобится для её разрыва.
                     </p>
-                    <p class="text-xs text-gray-500 mt-2">Координаты проецируются на график.</p>
+                </div>
+
+                <!-- Ползунок времени (строго до момента разрушения!) -->
+                <div class="space-y-4 pb-5 border-b border-neutral-200">
+                    <div>
+                        <div class="flex justify-between items-baseline text-xs mb-2">
+                            <label for="timeInput" class="font-medium text-neutral-800">Время выдержки в спирте:</label>
+                            <span class="font-mono-num text-xs text-neutral-500" id="rangeLimitLabel">от 0 до 20.7 с</span>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <input type="range" id="timeSlider" min="0" max="20.7" step="0.5" value="10" 
+                                   oninput="syncTime(this.value)" class="w-full">
+                            <div class="flex items-center border border-neutral-400 bg-neutral-50 px-2 py-1 w-24 shrink-0">
+                                <input type="number" id="timeInput" min="0" max="20.7" step="0.5" value="10"
+                                       oninput="syncTime(this.value)"
+                                       class="w-full bg-transparent font-mono-num text-sm font-semibold text-neutral-900 focus:outline-none text-right pr-1">
+                                <span class="font-mono-num text-xs text-neutral-500">с</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Быстрые кнопки -->
+                    <div class="flex items-center gap-1.5 flex-wrap">
+                        <span class="text-[11px] font-mono-num text-neutral-500 mr-1">Быстрый выбор:</span>
+                        <button onclick="syncTime(0)" class="px-2 py-0.5 text-xs font-mono-num border border-neutral-300 hover:border-neutral-900 bg-neutral-50">0 с (Сухая)</button>
+                        <button onclick="syncTime(5)" class="px-2 py-0.5 text-xs font-mono-num border border-neutral-300 hover:border-neutral-900 bg-neutral-50">5 с</button>
+                        <button onclick="syncTime(10)" class="px-2 py-0.5 text-xs font-mono-num border border-neutral-300 hover:border-neutral-900 bg-neutral-50">10 с</button>
+                        <button onclick="syncTime(15)" class="px-2 py-0.5 text-xs font-mono-num border border-neutral-300 hover:border-neutral-900 bg-neutral-50">15 с</button>
+                        <button id="btnMaxTime" onclick="syncTime(20.7)" class="px-2 py-0.5 text-xs font-mono-num border border-neutral-300 hover:border-neutral-900 bg-neutral-50">Разрушение</button>
+                    </div>
+                </div>
+
+                <!-- Результаты расчета -->
+                <div class="py-4 space-y-3 font-mono-num text-xs border-b border-neutral-200">
+                    <div class="flex justify-between items-baseline py-1 border-b border-dashed border-neutral-200">
+                        <span class="font-sans text-neutral-600">Сила разрыва сухой лопатки:</span>
+                        <span id="calcF0" class="font-semibold text-neutral-900">— Н</span>
+                    </div>
+                    <div class="flex justify-between items-baseline py-1 border-b border-dashed border-neutral-200">
+                        <span class="font-sans text-neutral-900 font-semibold">Сила разрыва после спирта:</span>
+                        <span id="calcFt" class="text-base font-bold text-blue-700">— Н</span>
+                    </div>
+                    <div class="flex justify-between items-baseline py-1 border-b border-dashed border-neutral-200">
+                        <span class="font-sans text-neutral-600">На сколько уменьшилась сила разрыва:</span>
+                        <span id="calcDeltaF" class="font-semibold text-red-700">— Н</span>
+                    </div>
+                    <div class="flex justify-between items-baseline py-1">
+                        <span class="font-sans text-neutral-600">Сколько килограммов на подвес выдержит:</span>
+                        <span id="calcKgf" class="font-semibold text-neutral-900">≈ — кг</span>
+                    </div>
+                </div>
+
+                <!-- Шкала запаса прочности -->
+                <div class="pt-4">
+                    <div class="flex justify-between text-xs font-mono-num mb-1.5">
+                        <span class="text-neutral-600">ОСТАВШИЙСЯ ЗАПАС ПРОЧНОСТИ:</span>
+                        <span id="calcRetentionPct" class="font-semibold text-neutral-900">—%</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-neutral-200 overflow-hidden mb-4">
+                        <div id="calcRetentionBar" class="h-full bg-neutral-900 transition-all duration-200" style="width: 100%"></div>
+                    </div>
+
+                    <!-- Понятный вывод по выбранному времени -->
+                    <div id="verdictContainer" class="bg-neutral-100 border-l-4 border-neutral-900 p-3.5 text-xs text-neutral-800 leading-relaxed">
+                        <div class="font-mono-num text-[11px] uppercase font-semibold text-neutral-900 mb-1" id="calcRegimeTitle">
+                            Состояние детали
+                        </div>
+                        <p id="calcRegimeDesc">Загрузка данных...</p>
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- Нижний блок: Вывод -->
-        <div class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm border-l-4 border-l-blue-600">
-            <h3 class="text-base font-bold text-gray-900 mb-2">Общий вывод</h3>
-            <p class="text-gray-600 text-sm leading-relaxed">
-                На основе математической модели и эмпирических данных установлено, что композиты на основе ПЛА <strong>критически теряют механические свойства</strong> при контакте со спиртосодержащими средами. При разработке 3D-печатных медицинских изделий необходимо исключить их контакт с полярными растворителями на этапах стерилизации и эксплуатации, так как это вызывает пластификацию матрицы и быструю потерю несущей способности.
-            </p>
-        </div>
+        <!-- Сравнение по группам (0, 5, 10 секунд) и физика процесса -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 border-b border-neutral-300 pb-10 mb-10">
+            
+            <!-- Таблица по сериям (6 колонок) -->
+            <div class="lg:col-span-6">
+                <div class="text-xs font-mono-num uppercase tracking-wider text-neutral-500 mb-3">
+                    Таблица 2. Средние результаты по группам испытаний (кликните для просмотра)
+                </div>
+                <div class="bg-white border border-neutral-300 overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="border-b border-neutral-300 bg-neutral-100 font-mono-num text-[11px] text-neutral-700 uppercase">
+                                <th class="py-2.5 px-3">Время в спирте</th>
+                                <th class="py-2.5 px-3">Лопаток</th>
+                                <th class="py-2.5 px-3">Средняя сила разрыва</th>
+                                <th class="py-2.5 px-3">Разброс (Мин–Макс)</th>
+                                <th class="py-2.5 px-3 text-right">Потеря силы</th>
+                            </tr>
+                        </thead>
+                        <tbody id="groupStatsBody" class="divide-y divide-neutral-200 font-mono-num">
+                            <tr><td colspan="5" class="p-4 text-center text-neutral-500">Загрузка...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="text-[11px] text-neutral-500 mt-2 leading-relaxed">
+                    Почему у лопаток с одинаковым временем немного разная сила разрыва? При 3D-печати пластик укладывается нитями послойно, поэтому в каждой детали возникают свои микроскопические неровности между слоями.
+                </p>
+            </div>
+
+            <!-- Три этапа разрушения простыми словами (6 колонок) -->
+            <div class="lg:col-span-6">
+                <div class="text-xs font-mono-num uppercase tracking-wider text-neutral-500 mb-3">
+                    Что именно происходит с лопаткой в спирте?
+                </div>
+                <div class="bg-white border border-neutral-300 p-5 space-y-3.5 text-xs leading-relaxed text-neutral-700">
+                    <div class="border-l-2 border-neutral-900 pl-3">
+                        <strong class="text-neutral-950 font-semibold block">Этап 1. Впитывание и набухание (Масса растет)</strong>
+                        Лопатка, напечатанная на 3D-принтере, работает как плотная губка: спирт моментально затекает в микрощели между слоями. По нашим замерам вес образцов после погружения вырос с <span class="font-mono-num text-neutral-900">1.443 г</span> до <span class="font-mono-num text-neutral-900">1.514 г</span>.
+                    </div>
+                    <div class="border-l-2 border-neutral-900 pl-3">
+                        <strong class="text-neutral-950 font-semibold block">Этап 2. Размягчение связей (Пластификация)</strong>
+                        Молекулы спирта проникают между цепочками полилактида и ослабляют их сцепление друг с другом. Из жесткого и упругого материала пластик на границах слоев превращается в податливый и рыхлый.
+                    </div>
+                    <div class="border-l-2 border-neutral-900 pl-3">
+                        <strong class="text-neutral-950 font-semibold block">Этап 3. Быстрое расслоение при растяжении</strong>
+                        Когда разрывная машина тянет лопатку, ослабленные спиртом слои легко отрываются друг от друга. Уже через 10 секунд в спирте требуется приложить <strong>в два раза меньше силы</strong>, чтобы разорвать деталь.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Блок ГЛАВНОГО ВЫВОДА исследования -->
+        <section class="border-b border-neutral-300 pb-10 mb-10">
+            <div class="bg-white border-2 border-neutral-900 p-6 md:p-8">
+                <div class="font-mono-num text-xs uppercase tracking-widest text-neutral-500 mb-2">
+                    04 / Итоговое заключение работы
+                </div>
+                <h2 class="font-serif-title text-2xl font-semibold text-neutral-950 mb-4">
+                    Главный вывод исследования и его практическая польза
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                    <div class="md:col-span-8 space-y-3 text-sm text-neutral-700 leading-relaxed">
+                        <p>
+                            В ходе экспериментов на кафедре ПИШ РТУ МИРЭА мы доказали, что <strong>3D-печатные детали из ПЛА-пластика критически теряют прочность при контакте со спиртом</strong>. Каждая секунда в спирте отнимает у лопатки около <span class="font-mono-num font-semibold text-neutral-900" id="conclusionRate">14.1 Н</span> прочности на разрыв: через 10 секунд деталь теряет половину своей надежности, а примерно к 21-й секунде полностью разрушается.
+                        </p>
+                        <p>
+                            <strong>Практическая рекомендация:</strong> Нагруженные медицинские и инженерные детали, напечатанные из ПЛА на 3D-принтере, <strong>нельзя замачивать в спирте для стерилизации</strong> — после такой обработки фиксатор или имплантат сломается при малейшей нагрузке. Для их обеззараживания необходимо применять бесконтактные методы (например, ультрафиолетовое облучение или газовую обработку).
+                        </p>
+                    </div>
+                    <div class="md:col-span-4 bg-neutral-100 border border-neutral-300 p-4 font-mono-num text-xs space-y-2">
+                        <div class="text-neutral-500 uppercase text-[10px]">Сводка безопасности ПЛА в спирте:</div>
+                        <div class="flex justify-between py-1 border-b border-neutral-200">
+                            <span>Протирка (1–2 с):</span>
+                            <span class="text-emerald-800 font-semibold">Допустимо (−10%)</span>
+                        </div>
+                        <div class="flex justify-between py-1 border-b border-neutral-200">
+                            <span>Окунание (5–10 с):</span>
+                            <span class="text-amber-800 font-semibold">Опасно (−50%)</span>
+                        </div>
+                        <div class="flex justify-between py-1">
+                            <span>Замачивание (>15 с):</span>
+                            <span class="text-red-700 font-semibold">Разрушение</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Спойлер/Таблица со всеми точками из базы данных -->
+        <section>
+            <div class="flex justify-between items-baseline mb-3">
+                <div class="text-xs font-mono-num uppercase tracking-wider text-neutral-500">
+                    Таблица 3. Все испытанные образцы-лопатки (выгрузка из базы PostgreSQL)
+                </div>
+                <span class="text-xs font-mono-num text-neutral-500">Нажмите на образец, чтобы увидеть его на графике</span>
+            </div>
+            <div class="bg-white border border-neutral-300 overflow-x-auto max-h-80">
+                <table class="w-full text-left border-collapse text-xs">
+                    <thead class="sticky top-0 bg-neutral-100 border-b border-neutral-300 font-mono-num text-[11px] text-neutral-700 uppercase">
+                        <tr>
+                            <th class="py-2.5 px-4">Номер лопатки</th>
+                            <th class="py-2.5 px-4">Время в спирте (с)</th>
+                            <th class="py-2.5 px-4">Реальная сила разрыва (Н)</th>
+                            <th class="py-2.5 px-4">Прогноз по формуле (Н)</th>
+                            <th class="py-2.5 px-4 text-right">Потеря к сухой детали</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rawTableBody" class="divide-y divide-neutral-200 font-mono-num">
+                        <tr>
+                            <td colspan="5" class="py-6 text-center text-neutral-400">Загрузка данных из базы...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
     </main>
 
-    <footer class="text-gray-400 py-6 text-center text-sm">
-        <p>Разработано в рамках инженерного практикума ПИШ • 2026</p>
+    <footer class="border-t border-neutral-300 bg-white py-6 mt-16 text-xs text-neutral-500 font-mono-num">
+        <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row justify-between items-center gap-2">
+            <span>РТУ МИРЭА (Кафедра ПИШ) × Технолицей • Инженерная стажировка</span>
+            <span>СУБД: Supabase PostgreSQL • Сервер: Node.js + Express • 2026</span>
+        </div>
     </footer>
 
     <script>
         let experimentalData = [];
-        let regression = { slope: 0, intercept: 0 };
+        let regression = { slope: 0, intercept: 0, r2: 0, zeroTime: 20.7 };
         let myChart = null;
 
-        // Метод наименьших квадратов
+        // Плагин для отрисовки фоновых цветовых зон прочности и линии разрушения на графике
+        const backgroundZonesPlugin = {
+            id: 'backgroundZones',
+            beforeDraw(chart) {
+                const { ctx, chartArea: { left, right, top, bottom }, scales: { x, y } } = chart;
+                if (!regression.intercept) return;
+
+                ctx.save();
+
+                // Пороги по оси Y: >75% (Зеленая зона), 35-75% (Желтая), <35% (Красная)
+                const y75 = y.getPixelForValue(regression.intercept * 0.75);
+                const y35 = y.getPixelForValue(regression.intercept * 0.35);
+
+                // Зеленая зона (высокая прочность)
+                ctx.fillStyle = 'rgba(16, 185, 129, 0.05)';
+                ctx.fillRect(left, top, right - left, Math.max(0, y75 - top));
+
+                // Желтая зона (ослабление)
+                ctx.fillStyle = 'rgba(245, 158, 11, 0.06)';
+                ctx.fillRect(left, y75, right - left, Math.max(0, y35 - y75));
+
+                // Красная зона (риск поломки)
+                ctx.fillStyle = 'rgba(239, 68, 68, 0.06)';
+                ctx.fillRect(left, y35, right - left, Math.max(0, bottom - y35));
+
+                // Вертикальная линия порога полного разрушения (zeroTime)
+                const xZeroPx = x.getPixelForValue(regression.zeroTime);
+                if (xZeroPx >= left && xZeroPx <= right) {
+                    ctx.beginPath();
+                    ctx.setLineDash([4, 4]);
+                    ctx.strokeStyle = '#991B1B';
+                    ctx.lineWidth = 1;
+                    ctx.moveTo(xZeroPx, top);
+                    ctx.lineTo(xZeroPx, bottom);
+                    ctx.stroke();
+
+                    ctx.fillStyle = '#991B1B';
+                    ctx.font = '500 10px "JetBrains Mono", monospace';
+                    ctx.textAlign = 'right';
+                    ctx.fillText(`Порог разрушения (~${regression.zeroTime.toFixed(1)} с)`, xZeroPx - 6, top + 14);
+                }
+
+                ctx.restore();
+            }
+        };
+
+        // Расчет линейной регрессии (МНК)
         function calculateLinearRegression(data) {
-            let n = data.length;
+            const n = data.length;
             let sumX = 0, sumY = 0, sumXY = 0, sumXX = 0;
-            data.forEach(point => {
-                sumX += point.x; sumY += point.y; sumXY += point.x * point.y; sumXX += point.x * point.x;
+            data.forEach(p => {
+                sumX += p.x;
+                sumY += p.y;
+                sumXY += p.x * p.y;
+                sumXX += p.x * p.x;
             });
+
             const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
             const intercept = (sumY - slope * sumX) / n;
-            return { slope, intercept };
+            const meanY = sumY / n;
+
+            let ssTot = 0, ssRes = 0;
+            data.forEach(p => {
+                const yPred = slope * p.x + intercept;
+                ssTot += Math.pow(p.y - meanY, 2);
+                ssRes += Math.pow(p.y - yPred, 2);
+            });
+
+            const r2 = ssTot !== 0 ? 1 - (ssRes / ssTot) : 0;
+            // Точное время, когда сила разрыва падает ровно до 0 Н
+            const zeroTime = slope < 0 ? Number((-intercept / slope).toFixed(1)) : 22;
+
+            return { slope, intercept, r2, zeroTime };
         }
 
-        async function loadDataAndDrawChart() {
+        // Синхронизация ползунка и поля времени
+        function syncTime(val) {
+            let num = parseFloat(val);
+            if (isNaN(num) || num < 0) num = 0;
+            if (num > regression.zeroTime) num = regression.zeroTime;
+
+            document.getElementById('timeSlider').value = num;
+            document.getElementById('timeInput').value = num;
+            updatePrediction();
+        }
+
+        // Заполнение таблиц и показателей
+        function renderTables(data, reg) {
+            const f0 = reg.intercept;
+            const rate = Math.abs(reg.slope);
+            const halfTime = (f0 / 2) / rate;
+
+            // Настраиваем предел ползунка ровно под время полного разрушения!
+            const slider = document.getElementById('timeSlider');
+            const numInput = document.getElementById('timeInput');
+            slider.max = reg.zeroTime;
+            numInput.max = reg.zeroTime;
+            document.getElementById('rangeLimitLabel').textContent = `от 0 до ${reg.zeroTime} с (до разрушения)`;
+            document.getElementById('btnMaxTime').textContent = `${reg.zeroTime} с (0 Н)`;
+            document.getElementById('btnMaxTime').onclick = () => syncTime(reg.zeroTime);
+
+            // Сводка в Таблице 1 и выводе
+            document.getElementById('formulaBadge').textContent = `Формула: F(t) = ${f0.toFixed(1)} − ${rate.toFixed(1)}·t`;
+            document.getElementById('statF0').textContent = `${f0.toFixed(1)} Н`;
+            document.getElementById('statSlope').textContent = `−${rate.toFixed(1)} Н/с`;
+            document.getElementById('statHalfTime').textContent = `${halfTime.toFixed(1)} с`;
+            document.getElementById('statZeroTime').textContent = `${reg.zeroTime.toFixed(1)} с`;
+            document.getElementById('statR2').textContent = reg.r2.toFixed(3);
+            document.getElementById('statSampleSize').textContent = `испытано: ${data.length} шт.`;
+            document.getElementById('conclusionRate').textContent = `${rate.toFixed(1)} Н`;
+
+            // Таблица 2: Группировка по времени (0, 5, 10 с)
+            const groups = {};
+            data.forEach(p => {
+                if (!groups[p.x]) groups[p.x] = [];
+                groups[p.x].push(p.y);
+            });
+
+            const groupBody = document.getElementById('groupStatsBody');
+            groupBody.innerHTML = '';
+
+            const baseMean = groups[0] 
+                ? groups[0].reduce((a, b) => a + b, 0) / groups[0].length 
+                : f0;
+
+            Object.keys(groups).map(Number).sort((a, b) => a - b).forEach(tVal => {
+                const arr = groups[tVal];
+                const mean = arr.reduce((a, b) => a + b, 0) / arr.length;
+                const min = Math.min(...arr);
+                const max = Math.max(...arr);
+                const dropN = baseMean - mean;
+                const dropPct = (dropN / baseMean) * 100;
+
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-neutral-100 cursor-pointer transition-colors';
+                tr.onclick = () => syncTime(tVal);
+                tr.innerHTML = `
+                    <td class="py-2.5 px-3 font-semibold text-neutral-900">${tVal} сек</td>
+                    <td class="py-2.5 px-3 text-neutral-600">${arr.length} шт.</td>
+                    <td class="py-2.5 px-3 font-semibold text-neutral-950">${mean.toFixed(1)} Н</td>
+                    <td class="py-2.5 px-3 text-neutral-600">${min.toFixed(0)} … ${max.toFixed(0)} Н</td>
+                    <td class="py-2.5 px-3 text-right ${tVal === 0 ? 'text-neutral-500' : 'text-red-700 font-semibold'}">
+                        ${tVal === 0 ? 'Сухой эталон' : '−' + dropN.toFixed(0) + ' Н (−' + dropPct.toFixed(0) + '%)'}
+                    </td>
+                `;
+                groupBody.appendChild(tr);
+            });
+
+            // Таблица 3: Все точки
+            const sortedData = [...data].sort((a, b) => a.x - b.x || b.y - a.y);
+            const rawBody = document.getElementById('rawTableBody');
+            rawBody.innerHTML = '';
+
+            sortedData.forEach((p, idx) => {
+                const yModel = Math.max(0, reg.slope * p.x + reg.intercept);
+                const diffFromF0 = p.y - f0;
+                const changePct = (diffFromF0 / f0) * 100;
+
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-neutral-100 cursor-pointer transition-colors';
+                tr.onclick = () => syncTime(p.x);
+                tr.innerHTML = `
+                    <td class="py-2 px-4 text-neutral-500">Лопатка #${idx + 1}</td>
+                    <td class="py-2 px-4 font-medium text-neutral-900">${p.x} с</td>
+                    <td class="py-2 px-4 font-semibold text-neutral-950">${p.y.toFixed(1)} Н</td>
+                    <td class="py-2 px-4 text-neutral-600">${yModel.toFixed(1)} Н</td>
+                    <td class="py-2 px-4 text-right ${changePct < -5 ? 'text-red-700' : 'text-neutral-600'}">
+                        ${p.x === 0 ? 'Контрольная группа' : diffFromF0.toFixed(1) + ' Н (' + changePct.toFixed(0) + '%)'}
+                    </td>
+                `;
+                rawBody.appendChild(tr);
+            });
+        }
+
+        // Обновление калькулятора и точки на графике
+        function updatePrediction() {
+            if (!myChart) return;
+
+            const time = parseFloat(document.getElementById('timeInput').value) || 0;
+            const f0 = regression.intercept;
+            const ft = Math.max(0, regression.slope * time + f0);
+
+            const deltaF = f0 - ft;
+            const lossPct = Math.min(100, Math.max(0, (deltaF / f0) * 100));
+            const retentionPct = Math.max(0, 100 - lossPct);
+            const kgf = ft / 9.80665;
+
+            document.getElementById('calcF0').textContent = `${f0.toFixed(1)} Н`;
+            document.getElementById('calcFt').textContent = `${ft.toFixed(1)} Н`;
+            document.getElementById('calcDeltaF').textContent = time === 0 ? '0.0 Н (без потерь)' : `−${deltaF.toFixed(1)} Н (−${lossPct.toFixed(1)}%)`;
+            document.getElementById('calcKgf').textContent = `≈ ${kgf.toFixed(1)} кг`;
+            document.getElementById('calcRetentionPct').textContent = `${retentionPct.toFixed(1)}%`;
+
+            const bar = document.getElementById('calcRetentionBar');
+            bar.style.width = `${retentionPct}%`;
+
+            const container = document.getElementById('verdictContainer');
+            const titleEl = document.getElementById('calcRegimeTitle');
+            const descEl = document.getElementById('calcRegimeDesc');
+
+            if (retentionPct >= 75) {
+                bar.className = 'h-full bg-emerald-700 transition-all duration-200';
+                container.className = 'bg-emerald-50/70 border-l-4 border-emerald-700 p-3.5 text-xs text-neutral-800 leading-relaxed';
+                titleEl.textContent = 'Нормальное состояние (Высокая прочность)';
+                descEl.textContent = time === 0
+                    ? `Сухая деталь до погружения в спирт. Чтобы разорвать лопатку, нужно приложить максимальное усилие ${f0.toFixed(1)} Н (это примерно как подвесить груз весом ${(f0/9.81).toFixed(0)} кг).`
+                    : `За ${time} с спирт затронул только внешний контур детали. Чтобы разорвать лопатку, потребуется на ${deltaF.toFixed(1)} Н меньше силы, чем для сухой. Деталь ещё держит нагрузку.`;
+            } else if (retentionPct >= 35) {
+                bar.className = 'h-full bg-amber-600 transition-all duration-200';
+                container.className = 'bg-amber-50/70 border-l-4 border-amber-600 p-3.5 text-xs text-neutral-800 leading-relaxed';
+                titleEl.textContent = 'Заметное ослабление детали (Спирт внутри слоев)';
+                descEl.textContent = `После ${time} с в спирте лопатка потеряла ${lossPct.toFixed(0)}% своей прочности! Для её разрыва теперь достаточно приложить ${ft.toFixed(1)} Н (на ${deltaF.toFixed(1)} Н меньше исходного). Использовать под нагрузкой нельзя.`;
+            } else if (ft > 1) {
+                bar.className = 'h-full bg-red-700 transition-all duration-200';
+                container.className = 'bg-red-50/70 border-l-4 border-red-700 p-3.5 text-xs text-neutral-800 leading-relaxed';
+                titleEl.textContent = 'Аварийное состояние (Высокий риск поломки)';
+                descEl.textContent = `Критическая потеря прочности (${lossPct.toFixed(0)}%). Сцепление между слоями 3D-печати разрушено спиртом — лопатка порвется уже при нагрузке ${ft.toFixed(1)} Н.`;
+            } else {
+                bar.className = 'h-full bg-red-900 transition-all duration-200';
+                container.className = 'bg-red-50 border-l-4 border-red-900 p-3.5 text-xs text-neutral-900 leading-relaxed';
+                titleEl.textContent = 'Полное разрушение (0% запаса прочности)';
+                descEl.textContent = `К ${regression.zeroTime} секунде по линейной модели прочность падает до 0 Н (потеряно все ${f0.toFixed(1)} Н). Слои пластика полностью утратили сцепление.`;
+            }
+
+            // Точка и пунктирные проекции на графике
+            myChart.data.datasets[2].data = [{ x: time, y: ft }];
+            myChart.data.datasets[3].data = [
+                { x: time, y: 0 },
+                { x: time, y: ft },
+                { x: 0, y: ft }
+            ];
+            myChart.update('none');
+        }
+
+        async function initPlatform() {
+            const statusEl = document.getElementById('dbStatusText');
             try {
-                // Относительный путь для работы на едином сервере
                 const response = await fetch('/api/experiments');
-                if (!response.ok) throw new Error('Сетевая ошибка');
-                
-                let rawData = await response.json();
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+
+                const rawData = await response.json();
                 experimentalData = rawData.map(p => ({ x: Number(p.x), y: Number(p.y) }));
                 regression = calculateLinearRegression(experimentalData);
 
-                const trendLineData = [
+                statusEl.textContent = `Подключено (${experimentalData.length} записей)`;
+                statusEl.className = 'font-semibold text-emerald-800';
+
+                renderTables(experimentalData, regression);
+
+                // Ось X заканчивается чуть правее точки разрушения (например, 22 с), чтобы не было пустого хвоста до 25 с
+                const axisMaxX = Math.ceil(regression.zeroTime + 1);
+
+                const trendLinePoints = [
                     { x: 0, y: regression.intercept },
-                    { x: 20, y: regression.slope * 20 + regression.intercept }
+                    { x: regression.zeroTime, y: 0 }
                 ];
 
                 const ctx = document.getElementById('forceChart').getContext('2d');
-                
+                Chart.defaults.font.family = "'JetBrains Mono', monospace";
+                Chart.defaults.font.size = 11;
+                Chart.defaults.color = '#374151';
+
                 myChart = new Chart(ctx, {
                     type: 'scatter',
+                    plugins: [backgroundZonesPlugin],
                     data: {
                         datasets: [
                             {
-                                label: 'Эксперимент',
+                                label: 'Реальная лопатка (опыт)',
                                 data: experimentalData,
-                                backgroundColor: 'rgba(75, 85, 99, 0.7)', 
-                                borderColor: 'rgb(75, 85, 99)',
+                                backgroundColor: '#111827',
+                                borderColor: '#FFFFFF',
+                                borderWidth: 1,
                                 pointRadius: 5,
                                 pointHoverRadius: 7,
+                                order: 2
+                            },
+                            {
+                                label: 'Линия прогноза F(t)',
+                                data: trendLinePoints,
+                                type: 'line',
+                                borderColor: '#1D4ED8',
+                                borderWidth: 2.2,
+                                fill: false,
+                                pointRadius: 0,
+                                tension: 0,
                                 order: 3
                             },
                             {
-                                label: 'Линия тренда',
-                                data: trendLineData,
-                                type: 'line',
-                                borderColor: 'rgba(37, 99, 235, 0.5)', 
+                                label: 'Выбранная точка',
+                                data: [],
+                                backgroundColor: '#DC2626',
+                                borderColor: '#FFFFFF',
                                 borderWidth: 2,
-                                fill: false,
-                                pointRadius: 0,
-                                borderDash: [5, 5],
-                                order: 4
-                            },
-                            {
-                                label: 'Прогноз (Точка)',
-                                data: [], 
-                                backgroundColor: 'rgba(37, 99, 235, 1)', 
-                                borderColor: '#ffffff',
-                                borderWidth: 2,
-                                pointRadius: 8,
-                                pointHoverRadius: 10,
+                                pointRadius: 7,
+                                pointHoverRadius: 8,
                                 type: 'scatter',
                                 order: 1
                             },
                             {
-                                label: 'Проекция',
+                                label: 'Проекция на оси',
                                 data: [],
                                 type: 'line',
-                                borderColor: 'rgba(239, 68, 68, 0.6)', 
-                                borderWidth: 1.5,
+                                borderColor: '#DC2626',
+                                borderWidth: 1.2,
                                 borderDash: [4, 4],
                                 pointRadius: 0,
                                 fill: false,
-                                order: 2
+                                tension: 0,
+                                order: 4
                             }
                         ]
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
-                        animation: {
-                            duration: 800,
-                            easing: 'easeOutQuart'
-                        },
+                        animation: false,
                         scales: {
-                            x: { 
-                                title: { display: true, text: 'Время в среде (с)' }, 
-                                min: 0, 
-                                max: 20 
+                            x: {
+                                type: 'linear',
+                                position: 'bottom',
+                                min: 0,
+                                max: axisMaxX,
+                                ticks: { stepSize: 2 },
+                                title: {
+                                    display: true,
+                                    text: 'Время выдержки лопатки в спирте, t (секунды)',
+                                    color: '#111827',
+                                    font: { family: "'Inter', sans-serif", size: 12, weight: '600' }
+                                },
+                                grid: { color: '#E5E7EB' },
+                                border: { color: '#111827', width: 1 }
                             },
-                            y: { 
-                                title: { display: true, text: 'Сила на разрыв (Н)' }, 
-                                min: 0, 
-                                max: 350 
+                            y: {
+                                type: 'linear',
+                                min: 0,
+                                max: 340,
+                                ticks: { stepSize: 50 },
+                                title: {
+                                    display: true,
+                                    text: 'Сила для разрыва лопатки, F (Ньютоны)',
+                                    color: '#111827',
+                                    font: { family: "'Inter', sans-serif", size: 12, weight: '600' }
+                                },
+                                grid: { color: '#E5E7EB' },
+                                border: { color: '#111827', width: 1 }
                             }
                         },
                         plugins: {
+                            legend: { display: false },
                             tooltip: {
-                                filter: function(tooltipItem) {
-                                    return tooltipItem.datasetIndex !== 3;
-                                },
+                                backgroundColor: '#111827',
+                                padding: 10,
+                                cornerRadius: 0,
+                                displayColors: false,
+                                filter: (item) => item.datasetIndex !== 3,
                                 callbacks: {
-                                    label: function(context) {
-                                        return `${context.dataset.label}: ${context.parsed.y.toFixed(1)} Н (${context.parsed.x} с)`;
-                                    }
+                                    label: (ctx) => `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)} Н (при t = ${ctx.parsed.x} с)`
                                 }
                             }
                         }
                     }
                 });
-            } catch (error) {
-                console.error("Ошибка:", error);
-                alert("Ошибка подключения. Убедитесь, что сервер запущен и база данных доступна.");
+
+                syncTime(10);
+
+            } catch (err) {
+                console.error(err);
+                statusEl.textContent = 'Ошибка соединения с БД';
+                statusEl.className = 'font-semibold text-red-700';
             }
         }
 
-        function predictForce() {
-            if (!myChart) return;
-
-            const timeInput = document.getElementById('timeInput').value;
-            const resultContainer = document.getElementById('resultContainer');
-            const predictedForceEl = document.getElementById('predictedForce');
-            
-            if (timeInput === '' || timeInput < 0) {
-                alert('Пожалуйста, введите корректное положительное время.');
-                return;
-            }
-            
-            const time = parseFloat(timeInput);
-            let predictedForce = regression.slope * time + regression.intercept;
-            if (predictedForce < 0) predictedForce = 0; 
-
-            predictedForceEl.textContent = predictedForce.toFixed(1);
-            resultContainer.classList.remove('opacity-0', 'translate-y-4');
-            resultContainer.classList.add('opacity-100', 'translate-y-0');
-
-            if (time > myChart.options.scales.x.max - 2) {
-                myChart.options.scales.x.max = time + 2;
-                myChart.data.datasets[1].data[1] = { 
-                    x: time + 2, 
-                    y: regression.slope * (time + 2) + regression.intercept 
-                };
-            }
-
-            myChart.data.datasets[2].data = [{ x: time, y: predictedForce }];
-            
-            myChart.data.datasets[3].data = [
-                { x: time, y: 0 },                  
-                { x: time, y: predictedForce },     
-                { x: 0, y: predictedForce }         
-            ];
-
-            myChart.update();
-        }
-
-        window.onload = loadDataAndDrawChart;
+        window.onload = initPlatform;
     </script>
 </body>
 </html>
