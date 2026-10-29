@@ -140,7 +140,7 @@
 
         async function loadDataAndDrawChart() {
             try {
-                const response = await fetch('http://localhost:3000/api/experiments');
+                const response = await fetch('/api/experiments');
                 if (!response.ok) throw new Error('Сетевая ошибка');
                 
                 let rawData = await response.json();
