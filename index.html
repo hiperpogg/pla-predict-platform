@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Цифровая платформа ПИШ | Анализ ПЛА</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans min-h-screen flex flex-col">
+    
+    <!-- Строгая шапка -->
+    <header class="bg-white border-b border-gray-300 py-6">
+        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900 mb-1">
+                    Цифровая платформа с моделью прогнозирования свойств имплантатов
+                </h1>
+                <p class="text-gray-500 text-sm">
+                    Инженерный практикум Передовой Инженерной Школы (ПИШ)
+                </p>
+            </div>
+            <div class="hidden md:block text-right">
+                <span class="text-xs text-gray-400 uppercase tracking-widest block">Материал</span>
+                <span class="text-lg font-semibold text-blue-600">ПЛА (Полилактид)</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Основной контент -->
+    <main class="flex-grow max-w-7xl mx-auto px-6 py-8 w-full space-y-6">
+        
+        <!-- Верхний ряд: Справочная информация -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Характеристики -->
+            <div class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+                <h2 class="text-lg font-bold text-gray-800 border-b border-gray-100 pb-2 mb-4">Характеристики материала</h2>
+                <ul class="space-y-3 text-sm text-gray-600">
+                    <li class="flex items-start gap-2">
+                        <span class="text-blue-500 mt-0.5">•</span> 
+                        <span><strong>Биосовместимость:</strong> Полилактид (PLA) применяется для создания биоразлагаемых медицинских имплантатов.</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-blue-500 mt-0.5">•</span> 
+                        <span><strong>Химическая стойкость:</strong> Материал уязвим к полярным растворителям (включая спирты), что ограничивает методы его стерилизации.</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-blue-500 mt-0.5">•</span> 
+                        <span><strong>Механика:</strong> Высокий модуль упругости в исходном состоянии, сменяющийся хрупкостью при начале деструкции.</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Наблюдения -->
+            <div class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+                <h2 class="text-lg font-bold text-gray-800 border-b border-gray-100 pb-2 mb-4">Физические эффекты (по данным БД)</h2>
+                <div class="space-y-3 text-sm text-gray-600">
+                    <p>Анализ загруженных результатов испытаний позволил зафиксировать следующие процессы:</p>
+                    <ul class="list-disc list-inside space-y-1 ml-1">
+                        <li><strong>Эффект набухания:</strong> Масса образцов возрастает ввиду абсорбции спирта (например, с 1.443 г до 1.514 г).</li>
+                        <li><strong>Пластификация:</strong> Молекулы растворителя проникают в полимерную матрицу, увеличивая свободный объем.</li>
+                        <li><strong>Снижение прочности:</strong> Резкое падение силы на разрыв (с ~300 Н до ~150 Н) наблюдается уже на 10-й секунде экспозиции.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Центральный блок: График и Прогнозирование -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Интерактивный график -->
+            <div class="lg:col-span-2 bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold text-gray-800">Параметрическая модель деградации</h3>
+                    <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded border border-gray-200">База данных подключена</span>
+                </div>
+                <div class="relative h-96 w-full">
+                    <canvas id="forceChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Блок прогнозирования -->
+            <div class="bg-blue-50 p-6 rounded-lg border border-blue-100 flex flex-col">
+                <h3 class="text-lg font-bold text-gray-900 mb-2">Расчетный модуль</h3>
+                <p class="text-sm text-gray-600 mb-6">
+                    Введите предполагаемое время нахождения имплантата в среде для вычисления предела прочности на разрыв.
+                </p>
+                
+                <div class="mb-4">
+                    <label for="timeInput" class="block text-sm font-medium text-gray-700 mb-1">Время выдержки (с):</label>
+                    <input type="number" id="timeInput" min="0" step="0.5" placeholder="Например: 12" 
+                           class="w-full border border-gray-300 rounded bg-white px-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
+                </div>
+                
+                <button onclick="predictForce()" 
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition-colors duration-200">
+                    Рассчитать
+                </button>
+                
+                <!-- Контейнер результата (с плавной анимацией появления) -->
+                <div id="resultContainer" class="mt-6 pt-4 border-t border-blue-200 opacity-0 transform translate-y-4 transition-all duration-500">
+                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Ожидаемая прочность</p>
+                    <p class="text-3xl font-bold text-blue-700">
+                        <span id="predictedForce">0.0</span> <span class="text-lg text-gray-600 font-normal">Н</span>
+                    </p>
+                    <p class="text-xs text-gray-500 mt-2">Координаты проецируются на график.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Нижний блок: Вывод -->
+        <div class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm border-l-4 border-l-blue-600">
+            <h3 class="text-base font-bold text-gray-900 mb-2">Общий вывод</h3>
+            <p class="text-gray-600 text-sm leading-relaxed">
+                На основе математической модели и эмпирических данных установлено, что композиты на основе ПЛА <strong>критически теряют механические свойства</strong> при контакте со спиртосодержащими средами. При разработке 3D-печатных медицинских изделий необходимо исключить их контакт с полярными растворителями на этапах стерилизации и эксплуатации, так как это вызывает пластификацию матрицы и быструю потерю несущей способности.
+            </p>
+        </div>
+    </main>
+
+    <footer class="text-gray-400 py-6 text-center text-sm">
+        <p>Разработано в рамках инженерного практикума ПИШ • 2026</p>
+    </footer>
+
+    <script>
+        let experimentalData = [];
+        let regression = { slope: 0, intercept: 0 };
+        let myChart = null;
+
+        // Метод наименьших квадратов
+        function calculateLinearRegression(data) {
+            let n = data.length;
+            let sumX = 0, sumY = 0, sumXY = 0, sumXX = 0;
+            data.forEach(point => {
+                sumX += point.x; sumY += point.y; sumXY += point.x * point.y; sumXX += point.x * point.x;
+            });
+            const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
+            const intercept = (sumY - slope * sumX) / n;
+            return { slope, intercept };
+        }
+
+        async function loadDataAndDrawChart() {
+            try {
+                const response = await fetch('http://localhost:3000/api/experiments');
+                if (!response.ok) throw new Error('Сетевая ошибка');
+                
+                let rawData = await response.json();
+                experimentalData = rawData.map(p => ({ x: Number(p.x), y: Number(p.y) }));
+                regression = calculateLinearRegression(experimentalData);
+
+                const trendLineData = [
+                    { x: 0, y: regression.intercept },
+                    { x: 20, y: regression.slope * 20 + regression.intercept }
+                ];
+
+                const ctx = document.getElementById('forceChart').getContext('2d');
+                
+                myChart = new Chart(ctx, {
+                    type: 'scatter',
+                    data: {
+                        datasets: [
+                            {
+                                label: 'Эксперимент',
+                                data: experimentalData,
+                                backgroundColor: 'rgba(75, 85, 99, 0.7)', // Нейтральный серый
+                                borderColor: 'rgb(75, 85, 99)',
+                                pointRadius: 5,
+                                pointHoverRadius: 7,
+                                order: 3
+                            },
+                            {
+                                label: 'Линия тренда',
+                                data: trendLineData,
+                                type: 'line',
+                                borderColor: 'rgba(37, 99, 235, 0.5)', // Приглушенный синий
+                                borderWidth: 2,
+                                fill: false,
+                                pointRadius: 0,
+                                borderDash: [5, 5],
+                                order: 4
+                            },
+                            // Датасет для интерактивной точки прогноза
+                            {
+                                label: 'Прогноз (Точка)',
+                                data: [], 
+                                backgroundColor: 'rgba(37, 99, 235, 1)', // Акцентный синий
+                                borderColor: '#ffffff',
+                                borderWidth: 2,
+                                pointRadius: 8,
+                                pointHoverRadius: 10,
+                                type: 'scatter',
+                                order: 1
+                            },
+                            // Датасет для линий проекций (drop-lines)
+                            {
+                                label: 'Проекция',
+                                data: [],
+                                type: 'line',
+                                borderColor: 'rgba(239, 68, 68, 0.6)', // Приглушенный красный пунктир
+                                borderWidth: 1.5,
+                                borderDash: [4, 4],
+                                pointRadius: 0,
+                                fill: false,
+                                order: 2
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        animation: {
+                            duration: 800,
+                            easing: 'easeOutQuart'
+                        },
+                        scales: {
+                            x: { 
+                                title: { display: true, text: 'Время в среде (с)' }, 
+                                min: 0, // Начинаем строго с 0 для корректных проекций
+                                max: 20 
+                            },
+                            y: { 
+                                title: { display: true, text: 'Сила на разрыв (Н)' }, 
+                                min: 0, 
+                                max: 350 
+                            }
+                        },
+                        plugins: {
+                            tooltip: {
+                                filter: function(tooltipItem) {
+                                    // Скрываем тултип для линий проекций (чтобы не мешался)
+                                    return tooltipItem.datasetIndex !== 3;
+                                },
+                                callbacks: {
+                                    label: function(context) {
+                                        return `${context.dataset.label}: ${context.parsed.y.toFixed(1)} Н (${context.parsed.x} с)`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error("Ошибка:", error);
+                alert("Ошибка подключения к PostgreSQL. Убедитесь, что сервер запущен.");
+            }
+        }
+
+        function predictForce() {
+            if (!myChart) return;
+
+            const timeInput = document.getElementById('timeInput').value;
+            const resultContainer = document.getElementById('resultContainer');
+            const predictedForceEl = document.getElementById('predictedForce');
+            
+            if (timeInput === '' || timeInput < 0) {
+                alert('Пожалуйста, введите корректное положительное время.');
+                return;
+            }
+            
+            const time = parseFloat(timeInput);
+            let predictedForce = regression.slope * time + regression.intercept;
+            if (predictedForce < 0) predictedForce = 0; 
+
+            // Плавное появление результата
+            predictedForceEl.textContent = predictedForce.toFixed(1);
+            resultContainer.classList.remove('opacity-0', 'translate-y-4');
+            resultContainer.classList.add('opacity-100', 'translate-y-0');
+
+            // Адаптация шкалы X, если введено большое время
+            if (time > myChart.options.scales.x.max - 2) {
+                myChart.options.scales.x.max = time + 2;
+                myChart.data.datasets[1].data[1] = { 
+                    x: time + 2, 
+                    y: regression.slope * (time + 2) + regression.intercept 
+                };
+            }
+
+            // 1. Устанавливаем точку прогноза
+            myChart.data.datasets[2].data = [{ x: time, y: predictedForce }];
+            
+            // 2. Отрисовываем перпендикулярные проекции (от оси X к точке, затем к оси Y)
+            myChart.data.datasets[3].data = [
+                { x: time, y: 0 },                  // Точка на оси X
+                { x: time, y: predictedForce },     // Сама точка прогноза
+                { x: 0, y: predictedForce }         // Точка на оси Y
+            ];
+
+            myChart.update();
+        }
+
+        window.onload = loadDataAndDrawChart;
+    </script>
+</body>
+</html>
